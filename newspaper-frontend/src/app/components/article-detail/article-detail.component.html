@@ -1,0 +1,43 @@
+<div class="modal-overlay" (click)="onOverlayClick($event)">
+  <div class="modal-box article-modal">
+    <button class="modal-close" (click)="close()">✕</button>
+
+    <span class="section-label">{{ article.category }}</span>
+    <h1 class="article-title">{{ article.title }}</h1>
+    <p class="article-meta">
+      By <strong>{{ article.author || 'Staff Reporter' }}</strong>
+      &bull; {{ formatDate(article.createdAt) }}
+    </p>
+
+    <hr class="ink-rule" />
+
+    <img *ngIf="article.imageUrl" [src]="article.imageUrl" [alt]="article.title" class="article-img" />
+
+    <!-- Summarizer -->
+    <div class="summarizer-bar">
+      <button class="btn btn-outline summarize-btn" (click)="summarize()" [disabled]="isSummarizing">
+        <span *ngIf="isSummarizing">⏳ Summarizing...</span>
+        <span *ngIf="!isSummarizing && !showSummary">📰 Quick Summary</span>
+        <span *ngIf="!isSummarizing && showSummary">Hide Summary</span>
+      </button>
+    </div>
+
+    <div class="summary-box" *ngIf="showSummary && summary">
+      <span class="summary-label">AI Summary</span>
+      <p>{{ summary }}</p>
+    </div>
+
+    <hr class="ink-rule" *ngIf="showSummary" />
+
+    <!-- Article content -->
+    <div class="article-body">
+      <p *ngFor="let para of article.content.split('\n\n')">{{ para }}</p>
+    </div>
+
+    <hr class="ink-rule" />
+    <div class="article-footer">
+      <span class="footer-category">Filed under: {{ article.category }}</span>
+      <button class="btn btn-outline" (click)="close()">← Back to News</button>
+    </div>
+  </div>
+</div>

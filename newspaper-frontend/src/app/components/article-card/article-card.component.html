@@ -1,0 +1,13 @@
+<div class="article-card" (click)="onClick()">
+  <img *ngIf="article.imageUrl" [src]="article.imageUrl" [alt]="article.title" class="card-img" />
+  <div *ngIf="!article.imageUrl" class="card-img-placeholder">
+    <span>{{ article.category }}</span>
+  </div>
+  <span class="card-category">{{ article.category }}</span>
+  <h3 class="card-headline">{{ article.title }}</h3>
+  <p class="card-meta">
+    {{ article.author || 'Staff Reporter' }} &bull; {{ formatDate(article.createdAt) }}
+  </p>
+  <p class="card-excerpt">{{ article.excerpt }}</p>
+  <span class="read-more">Read More →</span>
+</div>

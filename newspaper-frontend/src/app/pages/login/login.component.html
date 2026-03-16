@@ -1,0 +1,42 @@
+<div class="login-wrap">
+  <div class="login-box">
+    <span class="section-label">Editorial Access</span>
+    <h2 class="login-title">Admin Sign In</h2>
+    <p class="login-sub">Enter your credentials to access the newsroom.</p>
+
+    <hr class="ink-rule" />
+
+    <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+
+    <div class="form-group">
+      <label>Username</label>
+      <input
+        type="text"
+        [(ngModel)]="username"
+        placeholder="Enter username"
+        (keyup.enter)="login()"
+        autocomplete="username"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input
+        type="password"
+        [(ngModel)]="password"
+        placeholder="Enter password"
+        (keyup.enter)="login()"
+        autocomplete="current-password"
+      />
+    </div>
+
+    <button
+      class="btn btn-primary login-btn"
+      (click)="login()"
+      [disabled]="loading">
+      {{ loading ? 'Signing In...' : 'Sign In' }}
+    </button>
+
+    <p class="login-hint">Default credentials: <strong>admin</strong> / <strong>admin123</strong></p>
+  </div>
+</div>

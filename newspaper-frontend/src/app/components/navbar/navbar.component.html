@@ -1,0 +1,30 @@
+<header class="masthead">
+  <!-- Top strip -->
+  <div class="masthead-top">
+    <span class="masthead-date">{{ today | date:'EEEE, MMMM d, y' }}</span>
+    <span class="masthead-tagline hide-mobile">"All The News That's Fit To Read"</span>
+    <nav class="masthead-nav">
+      <a routerLink="/">Home</a>
+      <span class="nav-sep">|</span>
+      <ng-container *ngIf="isLoggedIn; else loginLink">
+        <a routerLink="/admin">Admin</a>
+        <span class="nav-sep">|</span>
+        <a href="#" (click)="logout(); $event.preventDefault()">Logout ({{ username }})</a>
+      </ng-container>
+      <ng-template #loginLink>
+        <a routerLink="/login">Admin Login</a>
+      </ng-template>
+    </nav>
+  </div>
+
+  <!-- Title -->
+  <div class="masthead-title-wrap">
+    <a routerLink="/" class="masthead-title-link">
+      <h1 class="masthead-title">The Daily Chronicle</h1>
+    </a>
+    <p class="masthead-subtitle">Independent · Insightful · Informed</p>
+  </div>
+
+  <!-- Bottom rule -->
+  <div class="masthead-rule"></div>
+</header>

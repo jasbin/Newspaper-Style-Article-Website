@@ -1,0 +1,55 @@
+<div class="detail-wrap">
+
+  <div class="spinner-wrap" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="alert alert-error" *ngIf="error">
+    {{ error }}
+    <a routerLink="/">← Back to Home</a>
+  </div>
+
+  <article *ngIf="article && !loading">
+    <div class="detail-header">
+      <a routerLink="/" class="back-link">← The Daily Chronicle</a>
+      <span class="section-label">{{ article.category }}</span>
+      <h1 class="detail-title">{{ article.title }}</h1>
+      <p class="detail-meta">
+        By <strong>{{ article.author || 'Staff Reporter' }}</strong>
+        &bull; {{ formatDate(article.createdAt) }}
+      </p>
+    </div>
+
+    <hr class="ink-rule-double" />
+
+    <img *ngIf="article.imageUrl" [src]="article.imageUrl" [alt]="article.title" class="detail-img" />
+
+    <!-- Summarizer -->
+    <div class="summarizer-bar">
+      <button class="btn btn-outline" (click)="summarize()" [disabled]="isSummarizing">
+        <span *ngIf="isSummarizing">⏳ Summarizing...</span>
+        <span *ngIf="!isSummarizing && !showSummary">📰 Quick Summary</span>
+        <span *ngIf="!isSummarizing && showSummary">Hide Summary</span>
+      </button>
+    </div>
+
+    <div class="summary-box" *ngIf="showSummary && summary">
+      <span class="summary-label">Quick Summary</span>
+      <p>{{ summary }}</p>
+    </div>
+
+    <hr class="ink-rule" *ngIf="showSummary" />
+
+    <div class="detail-body">
+      <p *ngFor="let para of paragraphs">{{ para }}</p>
+    </div>
+
+    <hr class="ink-rule" />
+
+    <div class="detail-footer">
+      <span>Filed under: <strong>{{ article.category }}</strong></span>
+      <a routerLink="/" class="btn btn-outline">← Back to News</a>
+    </div>
+  </article>
+
+</div>

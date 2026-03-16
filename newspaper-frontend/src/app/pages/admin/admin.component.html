@@ -1,0 +1,124 @@
+<div class="admin-wrap">
+
+  <!-- Admin Header -->
+  <div class="admin-header">
+    <div>
+      <span class="section-label">Newsroom</span>
+      <h2 class="admin-title">Editorial Dashboard</h2>
+    </div>
+    <div class="admin-header-actions">
+      <button class="btn btn-primary" (click)="openCreate()">+ New Article</button>
+      <button class="btn btn-outline" (click)="logout()">Logout</button>
+    </div>
+  </div>
+
+  <hr class="ink-rule-double" />
+
+  <!-- Alerts -->
+  <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+  <div class="alert alert-success" *ngIf="successMsg">{{ successMsg }}</div>
+
+  <!-- Article Form -->
+  <div class="article-form-wrap" *ngIf="showForm">
+    <span class="section-label">{{ editingId ? 'Edit Article' : 'New Article' }}</span>
+
+    <div class="form-grid">
+      <div class="form-group full-width">
+        <label>Headline *</label>
+        <input type="text" [(ngModel)]="form.title" placeholder="Enter article headline..." />
+      </div>
+
+      <div class="form-group">
+        <label>Category *</label>
+        <select [(ngModel)]="form.category">
+          <option value="">Select category...</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Author</label>
+        <input type="text" [(ngModel)]="form.author" placeholder="Reporter name..." />
+      </div>
+
+      <div class="form-group full-width">
+        <label>Image URL</label>
+        <input type="url" [(ngModel)]="form.imageUrl" placeholder="https://..." />
+      </div>
+
+      <div class="form-group full-width">
+        <label>Excerpt (optional - auto-generated if blank)</label>
+        <textarea [(ngModel)]="form.excerpt" rows="2" placeholder="Short summary for card view..."></textarea>
+      </div>
+
+      <div class="form-group full-width">
+        <label>Content *</label>
+        <textarea [(ngModel)]="form.content" rows="12" placeholder="Write your article content here...&#10;&#10;Use blank lines to separate paragraphs."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="form.featured" />
+          <span>Feature this article on homepage</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-accent" (click)="saveArticle()" [disabled]="loading">
+        {{ loading ? 'Saving...' : (editingId ? 'Update Article' : 'Publish Article') }}
+      </button>
+      <button class="btn btn-outline" (click)="cancelForm()">Cancel</button>
+    </div>
+
+    <hr class="ink-rule-double" />
+  </div>
+
+  <!-- Articles Table -->
+  <div class="spinner-wrap" *ngIf="loading && !showForm">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!loading || showForm">
+    <div class="table-header">
+      <span class="section-label" style="margin-bottom:0">
+        All Articles ({{ articles.length }})
+      </span>
+    </div>
+
+    <div class="articles-table">
+      <div class="table-head">
+        <span>Headline</span>
+        <span class="hide-mobile">Category</span>
+        <span class="hide-mobile">Author</span>
+        <span class="hide-mobile">Date</span>
+        <span>Actions</span>
+      </div>
+
+      <div class="table-row" *ngFor="let article of articles">
+        <span class="row-title">
+          <span class="featured-badge" *ngIf="article.featured">★</span>
+          {{ article.title }}
+        </span>
+        <span class="hide-mobile row-cat">{{ article.category }}</span>
+        <span class="hide-mobile row-meta">{{ article.author || '—' }}</span>
+        <span class="hide-mobile row-meta">{{ formatDate(article.createdAt) }}</span>
+        <span class="row-actions">
+          <button class="btn btn-outline btn-sm" (click)="openEdit(article)">Edit</button>
+          <button class="btn btn-danger btn-sm" (click)="confirmDelete(article.id)"
+            *ngIf="deleteConfirmId !== article.id">Delete</button>
+          <span class="confirm-delete" *ngIf="deleteConfirmId === article.id">
+            <span class="confirm-text">Sure?</span>
+            <button class="btn btn-danger btn-sm" (click)="deleteArticle(article.id)">Yes</button>
+            <button class="btn btn-outline btn-sm" (click)="cancelDelete()">No</button>
+          </span>
+        </span>
+      </div>
+
+      <div class="empty-state" *ngIf="articles.length === 0">
+        No articles yet. Click "New Article" to get started.
+      </div>
+    </div>
+  </div>
+
+</div>

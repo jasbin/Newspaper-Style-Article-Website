@@ -1,0 +1,92 @@
+<div class="home-wrap">
+
+  <!-- Category Nav Bar -->
+  <nav class="category-bar">
+    <button
+      *ngFor="let cat of categories"
+      [class.active]="selectedCategory === cat"
+      (click)="onCategoryChange(cat)"
+      class="cat-btn">
+      {{ cat }}
+    </button>
+  </nav>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <label class="search-label">🔍 Search</label>
+    <input
+      type="text"
+      [(ngModel)]="searchKeyword"
+      (ngModelChange)="onSearchChange()"
+      placeholder="Search articles, topics, authors..."
+      class="search-input"
+    />
+    <button *ngIf="searchKeyword" class="search-clear" (click)="searchKeyword=''; onSearchChange()">✕</button>
+  </div>
+
+  <div class="newspaper-body">
+
+    <!-- Featured Hero -->
+    <app-hero
+      *ngIf="featuredArticles.length && !searchKeyword && selectedCategory === 'All' && currentPage === 0"
+      [articles]="featuredArticles"
+      (articleClicked)="openArticle($event)">
+    </app-hero>
+
+    <!-- Section Header -->
+    <div class="grid-header">
+      <span *ngIf="!searchKeyword && selectedCategory === 'All'">Latest Dispatches</span>
+      <span *ngIf="searchKeyword">Results for "{{ searchKeyword }}"</span>
+      <span *ngIf="!searchKeyword && selectedCategory !== 'All'">{{ selectedCategory }}</span>
+      <span class="grid-count" *ngIf="pagedResponse">
+        {{ pagedResponse.totalElements }} {{ pagedResponse.totalElements === 1 ? 'article' : 'articles' }}
+      </span>
+    </div>
+
+    <!-- Loading -->
+    <div class="spinner-wrap" *ngIf="loading">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Error -->
+    <div class="alert alert-error" *ngIf="error && !loading">{{ error }}</div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!loading && !error && pagedResponse?.articles?.length === 0">
+      <p>No articles found. Try a different search or category.</p>
+    </div>
+
+    <!-- Articles Grid -->
+    <div class="articles-grid" *ngIf="!loading && pagedResponse && pagedResponse.articles.length > 0">
+      <app-article-card
+        *ngFor="let article of pagedResponse.articles"
+        [article]="article"
+        (clicked)="openArticle($event)">
+      </app-article-card>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="pagedResponse && pagedResponse.totalPages > 1">
+      <button (click)="onPageChange(currentPage - 1)" [disabled]="!pagedResponse.hasPrevious">← Prev</button>
+      <ng-container *ngFor="let page of pages">
+        <button
+          *ngIf="page <= 4 || page >= pagedResponse.totalPages - 2 || Math.abs(page - currentPage) <= 1"
+          [class.active]="page === currentPage"
+          (click)="onPageChange(page)">
+          {{ page + 1 }}
+        </button>
+      </ng-container>
+      <button (click)="onPageChange(currentPage + 1)" [disabled]="!pagedResponse.hasNext">Next →</button>
+      <span class="page-info">Page {{ currentPage + 1 }} of {{ pagedResponse.totalPages }}</span>
+    </div>
+
+  </div>
+
+  <!-- Article Detail Modal -->
+  <app-article-detail
+    *ngIf="selectedArticle"
+    [article]="selectedArticle"
+    (closed)="closeArticle()">
+  </app-article-detail>
+
+</div>

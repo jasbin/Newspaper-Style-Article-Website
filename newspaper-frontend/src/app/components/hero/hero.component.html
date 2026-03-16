@@ -1,0 +1,25 @@
+<section class="hero" *ngIf="featured">
+  <div class="hero-main" (click)="articleClicked.emit(featured)">
+    <span class="section-label">Featured Story</span>
+    <img *ngIf="featured.imageUrl" [src]="featured.imageUrl" [alt]="featured.title" class="hero-img" />
+    <div *ngIf="!featured.imageUrl" class="hero-img-placeholder">
+      <span>{{ featured.category }}</span>
+    </div>
+    <span class="hero-category">{{ featured.category }}</span>
+    <h2 class="hero-headline">{{ featured.title }}</h2>
+    <p class="hero-meta">
+      By {{ featured.author || 'Staff Reporter' }} &bull; {{ formatDate(featured.createdAt) }}
+    </p>
+    <p class="hero-excerpt">{{ featured.excerpt }}</p>
+  </div>
+
+  <div class="hero-side" *ngIf="secondary.length">
+    <span class="section-label">Also Today</span>
+    <div class="hero-secondary" *ngFor="let article of secondary" (click)="articleClicked.emit(article)">
+      <span class="side-category">{{ article.category }}</span>
+      <h3 class="side-headline">{{ article.title }}</h3>
+      <p class="side-meta">{{ article.author || 'Staff Reporter' }} &bull; {{ formatDate(article.createdAt) }}</p>
+      <p class="side-excerpt">{{ article.excerpt }}</p>
+    </div>
+  </div>
+</section>
